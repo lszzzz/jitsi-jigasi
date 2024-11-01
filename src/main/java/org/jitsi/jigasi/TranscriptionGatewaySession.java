@@ -17,6 +17,7 @@
  */
 package org.jitsi.jigasi;
 
+import com.alibaba.fastjson.JSON;
 import net.java.sip.communicator.impl.protocol.jabber.*;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.event.*;
@@ -696,6 +697,7 @@ public class TranscriptionGatewaySession
      */
     private void sendTranscriptionResultToRoom(TranscriptionResult result)
     {
+        logger.info("sendTranscriptionResultToRoom result:" + JSON.toJSONString(result));
         handler.publishTranscriptionResult(this.chatRoom, result);
     }
 

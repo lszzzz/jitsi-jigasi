@@ -621,6 +621,7 @@ public class Participant
                byte[] toBuffer;
                if (silenceFilter != null)
                {
+                   logger.info("buffer silenceFilter deal");
                    silenceFilter.giveSegment(audio);
                    if (silenceFilter.shouldFilter())
                    {
@@ -628,6 +629,7 @@ public class Participant
                    }
                    else if (silenceFilter.newSpeech())
                    {
+                       logger.info("buffer silenceFilter newSpeech");
                        // we need to cast here to keep compatability when moving between java8 and java11
                        ((Buffer) buffer).clear();
                        toBuffer = silenceFilter.getSpeechWindow();
@@ -648,12 +650,14 @@ public class Participant
                }
                catch (BufferOverflowException | ReadOnlyBufferException e)
                {
+                   logger.warn("buffer put exception: " + e.getMessage());
                    sendRequest(audio);
                }
 
                int spaceLeft = buffer.limit() - buffer.position();
                if (spaceLeft < EXPECTED_AUDIO_LENGTH)
                {
+                   logger.info("buffer reach limit length");
                    sendRequest(buffer.array());
                    // we need to cast here to keep compatability when moving between java8 and java11
                    ((Buffer) buffer).clear();
@@ -670,6 +674,7 @@ public class Participant
      */
     private void sendRequest(byte[] audio)
     {
+        logger.info("sendRequest audio length: " + audio.length);
         transcriber.executorService.execute(() ->
         {
             TranscriptionService.StreamingRecognitionSession session = sessions.getOrDefault(getLanguageKey(), null);
@@ -685,6 +690,7 @@ public class Participant
             else if (transcriber.getTranscriptionService().supportsStreamRecognition())
             // re-establish prematurely ended streaming session
             {
+                logger.info("sendRequest initStreamingSession");
                 session = transcriber.getTranscriptionService()
                         .initStreamingSession(this);
                 session.addTranscriptionListener(this);

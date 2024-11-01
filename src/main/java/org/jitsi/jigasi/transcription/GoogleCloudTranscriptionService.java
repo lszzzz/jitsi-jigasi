@@ -17,6 +17,7 @@
  */
 package org.jitsi.jigasi.transcription;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.uuid.*;
 import com.google.api.gax.rpc.*;
 import com.google.auth.oauth2.*;
@@ -785,6 +786,7 @@ public class GoogleCloudTranscriptionService
          */
         void terminateCurrentSession()
         {
+            logger.info("terminateCurrentSession");
             synchronized(currentRequestObserverLock)
             {
                 if (currentRequestObserver != null)
@@ -913,7 +915,7 @@ public class GoogleCloudTranscriptionService
 
             List<StreamingRecognitionResult> results = message.getResultsList();
             StreamingRecognitionResult result = results.get(0);
-
+            logger.info("onNext result: " + JSON.toJSONString(result));
             // If empty, the session has reached its time limit and
             // nothing new was said, but there should be an error in the message
             // so this is never supposed to happen

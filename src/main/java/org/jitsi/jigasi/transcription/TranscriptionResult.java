@@ -17,6 +17,8 @@
  */
 package org.jitsi.jigasi.transcription;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.time.*;
 import java.util.*;
 
@@ -33,6 +35,7 @@ public class TranscriptionResult
      * The {@link Participant} whose audio this {@link TranscriptionResult} is
      * a transcription of. Can be null.
      */
+    @JSONField(serialize=false)
     private Participant participant;
 
     /**
